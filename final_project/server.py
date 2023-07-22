@@ -1,20 +1,27 @@
-from machinetranslation import translator
-from translator import english_to_french, french_to_english
-from flask import Flask
+import machinetranslation
+from machinetranslation.translator import english_to_french
+from machinetranslation.translator import french_to_english
 
-app = Flask("web_app")
+from flask import Flask, render_template, request
 
-@app.route("/")
-def root():
-    input = 'input.html'
-    with open(input.html, 'r+') as readfile1:
-        print(readfile1.read())
-        readfile1.close()
+app = Flask(__name__)
+app=Flask(__name__,template_folder='Templates')
 
-@app.route("/englishToFrench")
-english_text = str(input())
-print(english_to_french(english_text))
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-@app.route("/frenchToEnglish")
-french_text = str(input())
-print(french_to_english(french_text))
+@app.route('/englishToFrench', methods=['POST'])
+def translate_english_to_french():
+    english_text = request.form['englishText']
+    english_translated_text = english_to_french(english_text)
+    return english_translated_text
+
+@app.route('/frenchToEnglish', methods=['POST'])
+def translate_french_to_english():
+    french_text = request.form['englishText']
+    french_translated_text = french_to_english(french_text)
+    return french_translated_text
+
+if __name__ == '__main__':
+    app.run(debug='TRUE',port=8080)
